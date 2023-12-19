@@ -4,6 +4,7 @@ import maya.mel as mel
 from maya import cmds
 
 from renderman_interface import *
+from maya_interface import *
 
 
 only_active_lights = False
@@ -70,6 +71,8 @@ def switch_light_func(mobject):
     global only_active_lights
     only_active_lights = mobject
 
+def generate_playblast(mobject):
+    generate_maya_playblast()
 
 # Initialize the script plug-in
 def initializePlugin(mobject):
@@ -77,6 +80,8 @@ def initializePlugin(mobject):
     global custom_menu
 
     custom_menu = cmds.menu('Moles Plugin', parent=mel.eval("$retvalue = $gMainWindow;"))
+    cmds.menuItem(divider=True, dividerLabel='Playblasts')
+    cmds.menuItem(label='Generate a playblast', command=generate_playblast, parent=custom_menu)
     cmds.menuItem(divider=True, dividerLabel='Render Settings')
     cmds.menuItem(label='Set render settings', command=set_render_settings, parent=custom_menu)
     cmds.menuItem(divider=True, dividerLabel='Generate AOVs')
@@ -98,3 +103,5 @@ def uninitializePlugin(mobject):
     except RuntimeError as e:
         sys.stderr.write("Failed to unregister callbacks: %s\n" % e)
     """
+
+
